@@ -1,0 +1,74 @@
+:root {
+  /* Digital Forensics Workstation Canvas */
+  --bg-void: #ffffff;
+  --bg-base: #f8fafc;
+  --bg-canvas: #f1f5f9;
+  --bg-panel: #ffffff;
+  --bg-panel-raised: #ffffff;
+  --bg-inset: #f1f5f9;
+  --bg-subtle: #f8fafc;
+
+  /* Technical Hairline Borders */
+  --border-hairline: #cbd5e1;
+  --border-hairline-soft: #e2e8f0;
+  --border-tech: #94a3b8;
+  --border-grid: rgba(203, 213, 225, 0.6);
+
+  /* High Contrast Cryptographic & Forensics Text Hierarchy */
+  --text-primary: #0f172a;
+  --text-secondary: #334155;
+  --text-tertiary: #64748b;
+  --text-disabled: #94a3b8;
+  --text-code: #0369a1;
+
+  /* Forensic Traffic-Light Signals */
+  --signal-safe: #16a34a;
+  --signal-safe-bg: #f0fdf4;
+  --signal-safe-border: #86efac;
+
+  --signal-suspicious: #d97706;
+  --signal-suspicious-bg: #fffbe6;
+  --signal-suspicious-border: #fde68a;
+
+  --signal-malicious: #dc2626;
+  --signal-malicious-bg: #fef2f2;
+  --signal-malicious-border: #fca5a5;
+
+  --signal-neutral: #475569;
+  --signal-neutral-bg: #f1f5f9;
+
+  /* Primary Accent: Electric Cyan / Deep Slate Blue */
+  --accent: #0284c7;
+  --accent-hover: #0369a1;
+  --accent-bg: #e0f2fe;
+  --accent-border: #7dd3fc;
+  --accent-deep: #0f172a;
+
+  /* Type Families */
+  --font-ui: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-mono: 'JetBrains Mono', 'SF Mono', Consolas, 'Liberation Mono', Menlo, monospace;
+
+  /* Spacing Scale */
+  --sp-1: 4px;
+  --sp-2: 8px;
+  --sp-3: 12px;
+  --sp-4: 16px;
+  --sp-5: 20px;
+  --sp-6: 24px;
+  --sp-8: 32px;
+  --sp-10: 40px;
+  --sp-12: 48px;
+
+  /* Sharp Technical Corners (Not Bubbly/SaaS) */
+  --radius-xs: 2px;
+  --radius-sm: 3px;
+  --radius-md: 4px;
+  --radius-lg: 6px;
+
+  /* Controlled Engineering Shadows */
+  --shadow-subtle: 0 1px 2px rgba(15, 23, 42, 0.05);
+  --shadow-panel: 0 1px 3px rgba(15, 23, 42, 0.06), 0 0 0 1px rgba(15, 23, 42, 0.03);
+  --shadow-hover: 0 3px 10px rgba(15, 23, 42, 0.08), 0 0 0 1px rgba(2, 132, 199, 0.3);
+}
+
+
