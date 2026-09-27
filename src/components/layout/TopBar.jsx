@@ -1,10 +1,12 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
+import { getDatabaseStatus } from '../../services/dbService';
 
 export default function TopBar() {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
+  const dbStatus = getDatabaseStatus();
 
   const handleLogout = () => {
     logout();
@@ -53,6 +55,22 @@ export default function TopBar() {
 
         <span style={{ color: 'var(--border-hairline)' }}>|</span>
 
+        <div style={{ display: 'flex', alignItems: 'center', gap: 5, fontSize: 11, fontWeight: 600 }} title={dbStatus.provider}>
+          <span
+            style={{
+              width: 6,
+              height: 6,
+              borderRadius: '50%',
+              background: dbStatus.connected ? 'var(--signal-safe)' : '#0284c7',
+            }}
+          />
+          <span className="mono" style={{ color: dbStatus.connected ? 'var(--signal-safe)' : 'var(--text-tertiary)' }}>
+            {dbStatus.connected ? 'DB: SUPABASE CLOUD' : 'DB: CLOUD READY'}
+          </span>
+        </div>
+
+        <span style={{ color: 'var(--border-hairline)' }}>|</span>
+
         {/* Analyst Session Badge */}
         <div style={{ display: 'flex', alignItems: 'center', gap: 7, fontSize: 11.5 }}>
           <span
@@ -68,7 +86,23 @@ export default function TopBar() {
           >
             {user?.name || 'S. Kavitha'}
           </span>
-          <span style={{ color: 'var(--text-tertiary)' }}>· Tier-2 SOC</span>
+          <span style={{ color: 'var(--text-tertiary)' }}>· {user?.role || 'Tier-2 SOC'}</span>
+          {user?.clearance && (
+            <span
+              className="mono"
+              style={{
+                fontSize: 10,
+                padding: '1px 4px',
+                borderRadius: 'var(--radius-xs)',
+                background: 'var(--accent-bg)',
+                color: 'var(--accent)',
+                fontWeight: 700,
+                border: '1px solid var(--accent-border)',
+              }}
+            >
+              {user.clearance}
+            </span>
+          )}
         </div>
 
         <span style={{ color: 'var(--border-hairline)' }}>|</span>

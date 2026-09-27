@@ -7,12 +7,23 @@ import HopMap from '../components/trace/HopMap';
 import GeoPanel from '../components/trace/GeoPanel';
 import VerdictPanel from '../components/trace/VerdictPanel';
 import ForensicReport from '../components/trace/ForensicReport';
+import PhishingDetectionPanel from '../components/trace/PhishingDetectionPanel';
+import SenderAttributionPanel from '../components/trace/SenderAttributionPanel';
+import InvestigationTimeline from '../components/trace/InvestigationTimeline';
+import IncidentResponsePanel from '../components/trace/IncidentResponsePanel';
+import InteractiveGeoMap from '../components/trace/InteractiveGeoMap';
+import LinuxToolsConsole from '../components/trace/LinuxToolsConsole';
 
 const TABS = [
   { id: 'trace', label: 'FORENSIC TRACE', icon: '◈' },
+  { id: 'phishing', label: 'PHISHING & FRAUD', icon: '🎯' },
+  { id: 'attribution', label: 'SENDER ATTRIBUTION', icon: '👤' },
+  { id: 'timeline', label: 'INVESTIGATION TIMELINE', icon: '⏱️' },
+  { id: 'incident', label: 'INCIDENT RESPONSE', icon: '🛡️' },
   { id: 'nlp', label: 'NLP THREAT ENGINE', icon: '🧠' },
   { id: 'protocol', label: 'PROTOCOL & HEADERS', icon: '☵' },
   { id: 'origin', label: 'ORIGIN & GEOLOCATION', icon: '🌐' },
+  { id: 'linux', label: 'LINUX TOOLS (CLI)', icon: '🐧' },
   { id: 'domain', label: 'DOMAIN INTELLIGENCE', icon: '🏛️' },
   { id: 'graph', label: 'RELATIONSHIP GRAPH', icon: '🕸️' },
   { id: 'links', label: 'LINKS & ATTACHMENTS', icon: '☍' },
@@ -598,8 +609,14 @@ export default function EmailAnalysis() {
                 alignItems: 'start',
               }}
             >
-              {/* Left Column: HopMap + GeoPanel */}
+              {/* Left Column: InteractiveGeoMap + HopMap + GeoPanel */}
               <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--sp-4)' }}>
+                <InteractiveGeoMap
+                  hops={parsedData.hopChain || parsedData.traceResult.hops}
+                  originGeo={parsedData.traceResult.geo}
+                  title="Geographic MTA Transmission Map"
+                  height={320}
+                />
                 <HopMap hops={parsedData.traceResult.hops} />
                 <GeoPanel geo={parsedData.traceResult.geo} />
               </div>
@@ -611,9 +628,42 @@ export default function EmailAnalysis() {
                   caseItem={caseItemAdapter}
                   result={parsedData.traceResult}
                   hash={parsedData.metadata.evidenceDigest}
+                  parsedData={parsedData}
                 />
               </div>
             </div>
+          )}
+
+          {/* TAB: PHISHING, SPOOFING & FRAUD DETECTION */}
+          {activeTab === 'phishing' && (
+            <PhishingDetectionPanel
+              detection={parsedData.phishingDetection}
+              parsedData={parsedData}
+            />
+          )}
+
+          {/* TAB: SENDER ATTRIBUTION CORRELATION */}
+          {activeTab === 'attribution' && (
+            <SenderAttributionPanel
+              parsedData={parsedData}
+            />
+          )}
+
+          {/* TAB: INVESTIGATION TIMELINE */}
+          {activeTab === 'timeline' && (
+            <InvestigationTimeline
+              parsedData={parsedData}
+            />
+          )}
+
+          {/* TAB: INCIDENT RESPONSE WORKFLOW */}
+          {activeTab === 'incident' && (
+            <IncidentResponsePanel
+              parsedData={parsedData}
+              privacyMode={privacyMode}
+              setPrivacyMode={setPrivacyMode}
+              onExportReport={() => setActiveTab('custody')}
+            />
           )}
 
           {/* TAB 2: COMPONENT 1 — NLP THREAT DETECTION ENGINE */}
@@ -927,6 +977,14 @@ export default function EmailAnalysis() {
           {/* TAB 4: COMPONENT 3 — ORIGIN TRACEABILITY & LOCATION ANALYSIS */}
           {activeTab === 'origin' && (
             <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--sp-4)' }}>
+              {/* Interactive GeoMap with Leaflet and Google Maps */}
+              <InteractiveGeoMap
+                hops={parsedData.hopChain}
+                originGeo={parsedData.traceResult.geo}
+                title="Geographic Origin & Transmission Pathway Map"
+                height={400}
+              />
+
               {/* Mandatory Anti-Fabrication Guarantee */}
               <div
                 style={{
@@ -1091,6 +1149,11 @@ export default function EmailAnalysis() {
                 </div>
               </div>
             </div>
+          )}
+
+          {/* TAB: LINUX NETWORK FORENSIC TOOLS */}
+          {activeTab === 'linux' && (
+            <LinuxToolsConsole parsedData={parsedData} />
           )}
 
           {/* TAB 5: COMPONENT 3 — DOMAIN INTELLIGENCE */}
@@ -1577,6 +1640,7 @@ export default function EmailAnalysis() {
                 caseItem={caseItemAdapter}
                 result={parsedData.traceResult}
                 hash={parsedData.metadata.evidenceDigest}
+                parsedData={parsedData}
               />
             </div>
           )}

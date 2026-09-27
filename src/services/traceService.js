@@ -7,6 +7,8 @@
 // mocked — EXCEPT the geolocation step, which makes a real network call
 // to a public IP-geolocation API so the origin map reflects live data.
 
+import { fetchIpGeo } from './apiClient';
+
 const GEO_API = 'https://ipapi.co';
 
 /** Deterministic per-scenario forensic data, keyed to mockCases.headerSample */
@@ -115,8 +117,30 @@ export function getStages() {
   return STAGES;
 }
 
-/** Real network call — live IP geolocation for the "wow" moment. */
+/** Real network call — live IP geolocation via CyberTrace Backend */
 async function resolveGeo(ip) {
+  // 1. Try our dedicated CyberTrace backend (with cache, multi-provider, offline fallback)
+  try {
+    const backendData = await fetchIpGeo(ip);
+    if (backendData && backendData.success && backendData.lat !== undefined && backendData.lon !== undefined) {
+      return {
+        ip: backendData.ip || ip,
+        city: backendData.city || 'Unknown',
+        region: backendData.regionName || backendData.region || '',
+        country: backendData.country || 'Unknown',
+        countryCode: backendData.countryCode || '',
+        lat: backendData.lat,
+        lon: backendData.lon,
+        isp: `${backendData.asn || ''} ${backendData.isp || backendData.org || ''}`.trim() || 'Unknown ISP',
+        live: backendData.live !== false,
+        source: backendData.source,
+      };
+    }
+  } catch (err) {
+    console.warn('[TraceService] Backend GeoIP failed, trying public fallback:', err.message);
+  }
+
+  // 2. Direct public API fallback
   try {
     const res = await fetch(`${GEO_API}/${ip}/json/`);
     if (!res.ok) throw new Error('geo lookup failed');

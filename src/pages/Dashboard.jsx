@@ -1,12 +1,27 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import CaseQueue from '../components/dashboard/CaseQueue';
 import { mockCases } from '../data/mockCases';
+import { fetchCases } from '../services/dbService';
 
 export default function Dashboard() {
   const navigate = useNavigate();
-  const pendingCount = mockCases.filter((c) => c.status === 'pending').length;
-  const escalatedCount = mockCases.filter((c) => c.status === 'escalated').length;
+  const [cases, setCases] = useState(mockCases);
+
+  useEffect(() => {
+    let active = true;
+    fetchCases().then((res) => {
+      if (active && res && res.length > 0) {
+        setCases(res);
+      }
+    });
+    return () => {
+      active = false;
+    };
+  }, []);
+
+  const pendingCount = cases.filter((c) => c.status === 'pending').length;
+  const escalatedCount = cases.filter((c) => c.status === 'escalated').length;
 
   return (
     <div style={{ maxWidth: 1160, margin: '0 auto', display: 'flex', flexDirection: 'column', gap: 'var(--sp-6)', fontFamily: 'var(--font-ui)' }}>
@@ -81,7 +96,7 @@ export default function Dashboard() {
         </div>
 
         {/* Case Queue Table */}
-        <CaseQueue cases={mockCases} onOpen={(item) => navigate(`/case/${item.id}`)} />
+        <CaseQueue cases={cases} onOpen={(item) => navigate(`/case/${item.id}`)} />
       </div>
     </div>
   );

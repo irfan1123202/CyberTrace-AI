@@ -5,6 +5,7 @@ import { useTrace } from '../hooks/useTrace';
 import LoadingTrace from '../components/common/LoadingTrace';
 import HopMap from '../components/trace/HopMap';
 import GeoPanel from '../components/trace/GeoPanel';
+import InteractiveGeoMap from '../components/trace/InteractiveGeoMap';
 import VerdictPanel from '../components/trace/VerdictPanel';
 import ForensicReport from '../components/trace/ForensicReport';
 import StatusBadge from '../components/common/StatusBadge';
@@ -253,21 +254,41 @@ export default function TraceDetail() {
           )}
 
           {status === 'done' && (
-            <button
-              className="btn"
-              onClick={() => start(caseItem)}
-              style={{
-                padding: '8px 16px',
-                fontSize: 12,
-                fontWeight: 700,
-                display: 'inline-flex',
-                alignItems: 'center',
-                gap: 6,
-              }}
-            >
-              <span>↻</span>
-              <span>RE-RUN FORENSIC TRACE</span>
-            </button>
+            <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
+              <button
+                className="btn"
+                onClick={() => start(caseItem)}
+                style={{
+                  padding: '8px 14px',
+                  fontSize: 11.5,
+                  fontWeight: 700,
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: 6,
+                }}
+              >
+                <span>↻</span>
+                <span>RE-RUN TRACE</span>
+              </button>
+              <button
+                className="btn"
+                onClick={() => navigate('/analysis')}
+                style={{
+                  padding: '8px 14px',
+                  fontSize: 11.5,
+                  fontWeight: 700,
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: 6,
+                  color: '#0284c7',
+                  background: '#f0f9ff',
+                  borderColor: '#bae6fd',
+                }}
+              >
+                <span>🔬</span>
+                <span>DEEP FORENSIC LAB</span>
+              </button>
+            </div>
           )}
 
           <div className="mono" style={{ fontSize: 10, color: '#64748b' }}>
@@ -403,8 +424,14 @@ export default function TraceDetail() {
             alignItems: 'start',
           }}
         >
-          {/* LEFT COLUMN: Hop Reconstruction (Visual Centerpiece) & Origin Intelligence */}
+          {/* LEFT COLUMN: Interactive GeoMap, Hop Reconstruction & Origin Intelligence */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--sp-4)' }}>
+            <InteractiveGeoMap
+              hops={result.hops}
+              originGeo={result.geo}
+              title="Geographic MTA Infrastructure Map"
+              height={320}
+            />
             <HopMap hops={result.hops} />
             <GeoPanel geo={result.geo} />
           </div>
@@ -413,6 +440,53 @@ export default function TraceDetail() {
           <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--sp-4)' }}>
             <VerdictPanel result={result} />
             <ForensicReport caseItem={caseItem} result={result} hash={hash} />
+
+            {/* Deep Forensic Lab CTA */}
+            <div
+              className="panel"
+              style={{
+                padding: '18px 20px',
+                background: 'linear-gradient(135deg, #0f172a 0%, #1e293b 100%)',
+                borderRadius: 'var(--radius-sm)',
+                border: '1px solid #334155',
+                display: 'flex',
+                flexDirection: 'column',
+                gap: 10,
+              }}
+            >
+              <div style={{ fontSize: 10.5, fontWeight: 700, color: '#7dd3fc', letterSpacing: '0.06em', textTransform: 'uppercase' }}>
+                ◈ ADVANCED ANALYSIS AVAILABLE
+              </div>
+              <div style={{ fontSize: 13.5, fontWeight: 800, color: '#f8fafc', lineHeight: 1.3 }}>
+                Deep Forensic Lab — 12-Module Investigation Workbench
+              </div>
+              <div style={{ fontSize: 11.5, color: '#94a3b8', lineHeight: 1.5 }}>
+                Run full-spectrum analysis: Phishing &amp; Fraud Detection, Sender Attribution, Investigation
+                Timeline, Incident Response Workflow, NLP Threat Engine, Domain Intelligence, and Chain-of-Custody export.
+              </div>
+              <button
+                className="btn btn-primary"
+                onClick={() => navigate('/analysis')}
+                style={{
+                  marginTop: 4,
+                  padding: '10px 20px',
+                  fontSize: 12.5,
+                  fontWeight: 700,
+                  background: '#0284c7',
+                  color: '#ffffff',
+                  border: '1px solid #0369a1',
+                  borderRadius: 4,
+                  cursor: 'pointer',
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: 8,
+                  alignSelf: 'flex-start',
+                }}
+              >
+                <span>🔬</span>
+                <span>OPEN DEEP FORENSIC LAB</span>
+              </button>
+            </div>
           </div>
         </div>
       )}

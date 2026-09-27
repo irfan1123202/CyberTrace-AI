@@ -2,6 +2,7 @@
 // -----------------------------------------------------------------------------
 // Pure defensive analysis of raw RFC-5322 MIME messages.
 // Enforces evidence provenance, safe URL extraction, and no impossible accuracy claims.
+import { runPhishingDetection } from './phishingDetectionService.js';
 
 /**
  * Validates and parses raw RFC-5322 / RFC-822 formatted email content into structured forensic components.
@@ -123,7 +124,30 @@ export async function parseEml(rawText, filename = 'imported-sample.eml') {
   // 16. Real-Time Pre-Interaction Forensic Alert
   const realTimeAlert = buildRealTimeAlert(nlpAnalysis, authResults, hopChain, extractedUrls, attributionAssessment);
 
-  // 17. Trace Result compatibility bridge (feeds existing HopMap, GeoPanel, VerdictPanel, ForensicReport)
+  // 17. Phishing, Spoofing & Fraud Detection Engine (IoCs, MITRE techniques, evidence tiers)
+  const phishingDetection = runPhishingDetection({
+    metadata: {
+      subject,
+      from,
+      to,
+      replyTo,
+      date,
+      messageId,
+      contentType,
+      evidenceDigest,
+    },
+    authResults,
+    hopChain,
+    protocolAnalysis,
+    nlpAnalysis,
+    domainIntelligence,
+    attributionAssessment,
+    urls: extractedUrls,
+    attachments,
+    headers,
+  });
+
+  // 18. Trace Result compatibility bridge (feeds existing HopMap, GeoPanel, VerdictPanel, ForensicReport)
   const traceResult = buildTraceResult(subject, from, to, date, hopChain, authResults, extractedUrls, infrastructureAssessment, nlpAnalysis, attributionAssessment);
 
   return {
@@ -157,6 +181,7 @@ export async function parseEml(rawText, filename = 'imported-sample.eml') {
     graphModel,
     chainOfCustody,
     realTimeAlert,
+    phishingDetection,
     traceResult,
   };
 }

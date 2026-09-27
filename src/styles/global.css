@@ -120,4 +120,28 @@ button { font-family: inherit; cursor: pointer; }
   margin: var(--sp-4) 0;
 }
 
+/* Print Optimization for Official Forensic Reports */
+@media print {
+  body {
+    background: #ffffff !important;
+    color: #000000 !important;
+  }
+  .app-shell {
+    display: block !important;
+  }
+  aside, header, .no-print {
+    display: none !important;
+  }
+  main {
+    padding: 0 !important;
+    overflow: visible !important;
+    height: auto !important;
+  }
+  .panel {
+    box-shadow: none !important;
+    border: 1px solid #cbd5e1 !important;
+    break-inside: avoid;
+  }
+}
+
 
